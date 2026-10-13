@@ -15,7 +15,9 @@ The publish job installs dependencies in a fresh checkout without a dependency c
 npm version <tag-version> --no-git-tag-version --ignore-scripts
 ```
 
-It updates the three version entries only in the job's checkout. It does not commit, create a tag, or push. The workflow checks the package contents with `npm pack --dry-run`, then calls `npm publish --access public --tag latest` with lifecycle scripts disabled and the public npm registry explicitly selected. This is direct publication, not staged publication.
+It updates the three version entries only in the job's checkout. It does not commit, create a tag, or push. The workflow checks the package contents with `npm pack --dry-run`, then calls `npm publish --provenance --access public --tag latest` with lifecycle scripts disabled and the public npm registry explicitly selected. This is direct publication, not staged publication.
+
+Provenance is mandatory for releases. The explicit `--provenance` flag requires generation before the package is submitted to the registry; a generation error fails the publish job. Relying on automatic enablement alone is weaker: npm 11.19.0 catches errors in its preliminary provenance checks and may continue publishing without provenance. Once provenance is enabled, generation errors are fatal with or without the explicit flag. This requirement does not verify subsequent availability of the version in the public registry.
 
 Only stable `vMAJOR.MINOR.PATCH` tags are supported. Numeric components must be npm-compatible and have no leading zeros. Prereleases and build metadata are not release triggers. `v0.0.0` is rejected because `0.0.0` is the local development placeholder. npm errors, including an already-published version, fail the job; the workflow does not suppress failures or fall back to another authentication method supplied by a project secret.
 

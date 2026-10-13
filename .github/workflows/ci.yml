@@ -53,4 +53,4 @@ jobs:
           RELEASE_TAG: ${{ github.ref_name }}
       - run: npm pack --dry-run --ignore-scripts
       - name: Publish with Trusted Publisher authentication
-        run: npm publish --access public --tag latest --ignore-scripts --registry=https://registry.npmjs.org/
+        run: npm publish --provenance --access public --tag latest --ignore-scripts --registry=https://registry.npmjs.org/
